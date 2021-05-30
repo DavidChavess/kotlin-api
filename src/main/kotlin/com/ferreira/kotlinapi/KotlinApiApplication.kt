@@ -1,5 +1,6 @@
 package com.ferreira.kotlinapi
 
+import com.ferreira.kotlinapi.model.Bank
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
