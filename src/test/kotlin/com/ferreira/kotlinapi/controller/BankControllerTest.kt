@@ -1,6 +1,10 @@
 package com.ferreira.kotlinapi.controller
 
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
@@ -16,16 +20,55 @@ internal class BankControllerTest {
 
     @Autowired
     lateinit var mockMvc: MockMvc
-    
-    @Test
-    fun `should return all banks`(){
-        // when
-        mockMvc.get(BASE_URL)
+
+    @Nested
+    @DisplayName("getBanks()")
+    @TestInstance(PER_CLASS)
+    inner class GetBanks() {
+        @Test
+        fun `should return all banks`() {
+            // when
+            mockMvc.get(BASE_URL)
             .andDo { print() }
             .andExpect {
                 content { contentType(MediaType.APPLICATION_JSON) }
                 status { isOk() }
-                jsonPath("[0].accountNumber"){value(1234)}
+                jsonPath("[0].accountNumber") { value(1234) }
             }
+        }
     }
+
+    @Nested
+    @DisplayName("getBank()")
+    @TestInstance(PER_CLASS)
+    inner class GetBank() {
+        @Test
+        fun `should return the bank with the given account number`() {
+            // given
+            val accountNumber = 1234;
+
+            // when
+            mockMvc.get(BASE_URL + "/$accountNumber")
+            .andDo { print() }
+            .andExpect {
+                status { isOk() }
+                jsonPath("accountNumber") { value(accountNumber) }
+            }
+        }
+
+        @Test
+        fun `should return NOT FOUND if the account number does not exist`() {
+            // given
+            val accountNumber = 12345;
+
+            // when
+            mockMvc.get(BASE_URL + "/$accountNumber")
+                .andDo { print() }
+                .andExpect {
+                    status { isNotFound() }
+                    jsonPath("message") { value("Bank not found") }
+                }
+        }
+    }
+
 }

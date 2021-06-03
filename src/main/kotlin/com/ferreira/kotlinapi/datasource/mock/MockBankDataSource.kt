@@ -1,6 +1,7 @@
 package com.ferreira.kotlinapi.datasource.mock
 
 import com.ferreira.kotlinapi.datasource.BankDataSource
+import com.ferreira.kotlinapi.exception.BusinessException
 import com.ferreira.kotlinapi.model.Bank
 import org.springframework.stereotype.Repository
 
@@ -14,4 +15,8 @@ class MockBankDataSource : BankDataSource {
     );
 
     override fun retrieveBanks() = listOfBanks.sortedBy { it.accountNumber };
+
+    override fun retrieveBank(accountNumber: String): Bank =
+        listOfBanks.firstOrNull{ it.accountNumber == accountNumber }
+            ?: throw BusinessException("Bank not found")
 }
