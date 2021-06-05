@@ -2,10 +2,8 @@ package com.ferreira.kotlinapi.controller
 
 import com.ferreira.kotlinapi.model.Bank
 import com.ferreira.kotlinapi.service.BankService
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.http.HttpStatus
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/banks")
@@ -16,6 +14,9 @@ class BankController(
     fun getBanks():Collection<Bank> = service.getBanks();
 
     @GetMapping("/{accountNumber}")
-    fun getBank(@PathVariable accountNumber: String): Bank =
-        service.getBank( accountNumber );
+    fun getBank(@PathVariable accountNumber: String): Bank = service.getBank( accountNumber );
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    fun addBank(@RequestBody bank: Bank): Bank = service.createBank(bank);
 }

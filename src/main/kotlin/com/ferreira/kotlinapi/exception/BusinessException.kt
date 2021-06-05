@@ -1,7 +1,8 @@
 package com.ferreira.kotlinapi.exception
 
-import java.lang.RuntimeException
+import org.springframework.http.HttpStatus
+import org.springframework.web.server.ResponseStatusException
 
-class BusinessException(msg: String) : RuntimeException(msg) {
+class BusinessException(msg: String, status: HttpStatus) : ResponseStatusException(status, msg) {
 
 }
